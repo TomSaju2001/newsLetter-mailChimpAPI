@@ -1,5 +1,3 @@
-//We need to install the npm module @mailchimp/mailchimp_marketing.
-//npm install @mailchimp/mailchimp_marketing
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 
 const express = require("express");
@@ -7,6 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 app.use(bodyParser.urlencoded({extended:true}));
+
 //The public folder which holds the CSS and images
 app.use(express.static("public"));
 
@@ -26,14 +25,16 @@ app.post("/", function (req,res) {
 const firstName = req.body.firstName;
 const secondName = req.body.lastName;
 const email = req.body.email;
-//*****************************ENTER YOU LIST ID HERE******************************
+
 const listId = "677e755aa0";
+
 //Creating an object with the users data
 const subscribingUser = {
  firstName: firstName,
  lastName: secondName,
  email: email
 };
+
 //Uploading the data to the server
  async function run() {
 const response = await mailchimp.lists.addListMember(listId, {
@@ -53,9 +54,23 @@ const response = await mailchimp.lists.addListMember(listId, {
 );
 }
 //Running the function and catching the errors (if any)
-// ************************THIS IS THE CODE THAT NEEDS TO BE ADDED FOR THE NEXT LECTURE*************************
+
 // So the catch statement is executed when there is an error so if anything goes wrong the code in the catch code is executed. In the catch block we're sending back the failure page. This means if anything goes wrong send the faliure page
  run().catch(e => res.sendFile(__dirname + "/failurePage.html"));
+});
+
+app.post("/failure", function(request, response){
+  response.redirect("/");
+});
+
+
+app.post("/success", function(request, response){
+  response.redirect("/");
+});
+
+
+app.listen(3000,function () {
+ console.log("Server is running at port 3000");
 });
 
 //mailChimp API key
@@ -63,6 +78,3 @@ const response = await mailchimp.lists.addListMember(listId, {
 
 //Audience id or List ID
 //677e755aa0
-app.listen(3000,function () {
- console.log("Server is running at port 3000");
-});
